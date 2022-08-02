@@ -45,13 +45,9 @@ class ResultFormatter:
 
             self.current_tag = current_tag
 
-        # Show status as tests pass/fail.
-        is_successful = False
-        if (
-            len(result.responses) == len(result.requests) and
-            not any(result.responses.test_results.values())
-        ):
-            is_successful = True
+        is_successful = len(result.responses) == len(result.requests) and not any(
+            result.responses.test_results.values()
+        )
 
         # Record stats for summary output.
         if is_successful:

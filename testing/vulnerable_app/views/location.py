@@ -1,6 +1,7 @@
 """
 These endpoints focus on accepting input from a variety of different locations.
 """
+
 from flask_restplus import Resource
 
 from ..core.extensions import api
@@ -9,10 +10,7 @@ from ..util import get_name
 from .models.basic import string_model
 
 
-ns = api.namespace(
-    get_name(__name__),
-    url_prefix='/{}'.format(get_name(__name__)),
-)
+ns = api.namespace(get_name(__name__), url_prefix=f'/{get_name(__name__)}')
 
 
 @api.marshal_with(string_model.format)

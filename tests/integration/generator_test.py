@@ -82,7 +82,7 @@ def test_exclude_operations(mock_client, excluded_operations):
 def test_included_tags(mock_client, included_tags):
     results = list(generate_sequences(1))
 
-    assert len(results) > 0
+    assert results
     for sequence in [result.requests for result in results]:
         for request in sequence:
             assert request.tag in included_tags
@@ -168,12 +168,13 @@ def test_length_three(mock_client):
 
 def is_in_result(expected_sequence, result):
     for sequence in result:
-        formatted_sequence = []
-        for request in sequence:
-            formatted_sequence.append({
+        formatted_sequence = [
+            {
                 'tag': request.tag,
                 'id': request.operation_id,
-            })
+            }
+            for request in sequence
+        ]
 
         if formatted_sequence == expected_sequence:
             return True

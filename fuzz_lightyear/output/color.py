@@ -14,11 +14,8 @@ class AnsiColor(Enum):
 
 
 def colorize(text: str, color: AnsiColor) -> str:
-    if not get_settings().enable_color:
-        return text
-
-    return '\x1b{}{}\x1b{}'.format(
-        color.value,
-        text,
-        AnsiColor.RESET.value,
+    return (
+        f'\x1b{color.value}{text}\x1b{AnsiColor.RESET.value}'
+        if get_settings().enable_color
+        else text
     )

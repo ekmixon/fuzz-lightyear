@@ -1,6 +1,7 @@
 """
 Mainly used for setup.
 """
+
 import random
 import string
 
@@ -14,10 +15,7 @@ from ..util import get_name
 from .models.database import user_model
 
 
-ns = api.namespace(
-    get_name(__name__),
-    url_prefix='/{}'.format(get_name(__name__)),
-)
+ns = api.namespace(get_name(__name__), url_prefix=f'/{get_name(__name__)}')
 
 
 @ns.route('/create')

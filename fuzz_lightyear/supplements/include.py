@@ -14,8 +14,7 @@ def tags(func: Callable[[], Iterable[str]]) -> Callable:
             ... def a():
             ...     return ['user_account']
     """
-    tags_to_include = func()
-    if tags_to_include:
+    if tags_to_include := func():
         get_included_tags().update(tags_to_include)
 
     return func

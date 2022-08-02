@@ -37,9 +37,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     # warning does not apply to us.
     warnings.filterwarnings('ignore', category=NonInteractiveExampleWarning)
 
-    # Setup
-    message = setup_client(args.url, args.schema)
-    if message:
+    if message := setup_client(args.url, args.schema):
         print_error(message)
         return 1
 
@@ -74,10 +72,12 @@ def setup_client(
 
     try:
         config = {'internally_dereference_refs': True}
-        if not schema:
-            client = SwaggerClient.from_url(url, config=config)
-        else:
-            client = SwaggerClient.from_spec(schema, origin_url=url, config=config)
+        client = (
+            SwaggerClient.from_spec(schema, origin_url=url, config=config)
+            if schema
+            else SwaggerClient.from_url(url, config=config)
+        )
+
     except requests.exceptions.ConnectionError:
         return 'Unable to connect to server.'
     except (
@@ -85,10 +85,8 @@ def setup_client(
         yaml.YAMLError,
         HTTPError,
     ):
-        return (
-            'Invalid swagger file. Please check to make sure the '
-            'swagger file can be found at: {}.'.format(url)
-        )
+        return f'Invalid swagger file. Please check to make sure the swagger file can be found at: {url}.'
+
     except SwaggerValidationError:
         return 'Invalid swagger format.'
 

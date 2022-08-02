@@ -23,10 +23,7 @@ class Abstraction:
 
     @property
     def request_method(self) -> Callable:
-        if self._request_method:
-            return self._request_method
-
-        return default_request_method
+        return self._request_method or default_request_method
 
     @request_method.setter
     def request_method(self, func: Callable) -> None:

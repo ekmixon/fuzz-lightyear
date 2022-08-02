@@ -25,22 +25,21 @@ def format_results(
     sequences_output = ''
     for result in results:
         name, info = _format_result(result)
-        sequences_output += textwrap.dedent("""
+        sequences_output += textwrap.dedent(
+            """
             {header}
             {info}
-        """)[1:].format(
+        """
+        )[1:].format(
             header=colorize(
                 format_header(
-                    '{} [{}]'.format(
-                        result.requests[-1].id,
-                        name,
-                    ),
-                    header_line='_',
+                    f'{result.requests[-1].id} [{name}]', header_line='_'
                 ),
                 AnsiColor.RED,
             ),
             info=info,
         )
+
 
         if not result.log_output:
             continue
@@ -151,10 +150,8 @@ def format_summary(
     if color == AnsiColor.RESET:
         summary_string = 'No tests run'
     else:
-        summary_string = '{} in {} seconds'.format(
-            ', '.join(summary),
-            round(timing.total_seconds(), 2),
-        )
+        summary_string = f"{', '.join(summary)} in {round(timing.total_seconds(), 2)} seconds"
+
 
     return colorize(
         colorize(
@@ -187,11 +184,7 @@ def format_header(
         padding_length -= 1
 
     padding_per_side = padding_length // 2
-    return '{}{}{}'.format(
-        padding_per_side * header_line,
-        message,
-        padding_per_side * header_line,
-    )
+    return f'{padding_per_side * header_line}{message}{padding_per_side * header_line}'
 
 
 @lru_cache(maxsize=1)
@@ -227,10 +220,13 @@ def format_warning(
         basic.get_private_listing
           /path/to/file.py:345 Warning: This is a warning message!
     """
-    if not warning:
-        return ''
-
-    return textwrap.dedent(f"""
+    return (
+        textwrap.dedent(f"""
         {test_id}
           {warning}
-    """)[1:-1]
+    """)[
+            1:-1
+        ]
+        if warning
+        else ''
+    )

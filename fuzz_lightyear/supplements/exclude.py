@@ -99,7 +99,5 @@ def _format_operation(operation: str) -> Optional[Tuple[str, Optional[str]]]:
             tag, operation_id = operation.split('.')
             return (operation_id, tag)
 
-    print_warning(
-        f'Failed to interpret {str(operation)} as an operation to exclude.',
-    )
+    print_warning(f'Failed to interpret {operation} as an operation to exclude.')
     return None

@@ -14,13 +14,12 @@ class ConflictingKeys(BaseFuzzingError):
     ) -> None:
         if operation_id:
             return super().__init__(
-                'There are multiple factory registrations for "{}" in "{}".'
-                .format(operation_id, key),
+                f'There are multiple factory registrations for "{operation_id}" in "{key}".',
                 *args,
             )
+
         return super().__init__(
-            'There are multiple factory registrations for "{}".'.format(key),
-            *args,
+            f'There are multiple factory registrations for "{key}".', *args
         )
 
 
@@ -31,6 +30,5 @@ class ConflictingHandlers(BaseFuzzingError):
         *args: Any,
     ) -> None:
         return super().__init__(
-            'There are multiple handlers registered for "{}".'.format(key),
-            *args,
+            f'There are multiple handlers registered for "{key}".', *args
         )

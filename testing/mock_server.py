@@ -12,12 +12,12 @@ from testing.vulnerable_app.__main__ import main as start_server
 
 
 PORT = int(os.environ.get('PORT', 5000))
-URL = 'http://localhost:{}'.format(PORT)
+URL = f'http://localhost:{PORT}'
 
 
 def get_mock_schema():
     with vulnerable_server():
-        return requests.get('{}/schema'.format(URL)).json()
+        return requests.get(f'{URL}/schema').json()
 
 
 @contextmanager

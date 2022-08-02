@@ -128,7 +128,7 @@ def _is_valid_schema(path: str) -> Dict[str, Any]:
             pass
 
         raise argparse.ArgumentTypeError(
-            'Invalid schema file: {}. Check that it is either JSON or YAML.'.format(path),
+            f'Invalid schema file: {path}. Check that it is either JSON or YAML.'
         )
 
 
@@ -140,9 +140,7 @@ def _is_json_schema(path: str) -> Dict[str, Any]:
                 json.loads(f.read()),
             )
         except json.decoder.JSONDecodeError:
-            raise argparse.ArgumentTypeError(
-                'Invalid JSON file: {}'.format(path),
-            )
+            raise argparse.ArgumentTypeError(f'Invalid JSON file: {path}')
 
 
 def _is_yaml_schema(path: str) -> Dict[str, Any]:
@@ -153,15 +151,11 @@ def _is_yaml_schema(path: str) -> Dict[str, Any]:
                 yaml.load(f, Loader=SafeLoader),
             )
         except yaml.YAMLError:
-            raise argparse.ArgumentTypeError(
-                'Invalid YAML file: {}'.format(path),
-            )
+            raise argparse.ArgumentTypeError(f'Invalid YAML file: {path}')
 
 
 def _is_valid_path(path: str) -> str:
     if not os.path.exists(path):
-        raise argparse.ArgumentTypeError(
-            'Invalid path: {}'.format(path),
-        )
+        raise argparse.ArgumentTypeError(f'Invalid path: {path}')
 
     return path

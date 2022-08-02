@@ -25,10 +25,8 @@ class User:
             session.commit()
 
     def __str__(self):
-        output = 'User('
-        output += ', '.join([
-            f'{attr}={value}'
-            for attr, value in self.__dict__.items()
-        ])
+        output = 'User(' + ', '.join(
+            [f'{attr}={value}' for attr, value in self.__dict__.items()]
+        )
 
-        return output + ')'
+        return f'{output})'

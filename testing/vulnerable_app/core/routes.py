@@ -14,9 +14,9 @@ def configure_routes(app):
 
     for module_name in views.__all__:
         module = import_module(
-            '.views.{}'.format(module_name),
-            package='testing.vulnerable_app',
+            f'.views.{module_name}', package='testing.vulnerable_app'
         )
+
 
         api.add_namespace(module.ns)
 

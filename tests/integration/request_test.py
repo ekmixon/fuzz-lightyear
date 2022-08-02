@@ -90,12 +90,11 @@ def test_send_endpoint_auth(mock_client):
     fuzz_lightyear.attacker_account(
         lambda operation_id: {
             '_request_options': {
-                'headers': {
-                    'Cookie': 'session=' + operation_id,
-                },
-            },
-        },
+                'headers': {'Cookie': f'session={operation_id}'}
+            }
+        }
     )
+
 
     assert request.send(
         auth=get_abstraction().get_attacker_session,

@@ -37,6 +37,7 @@ class TestPostFuzzHooks:
     def test_registering_hooks_all_operations(self):
         def hook(x, y):
             return y
+
         register_post_fuzz_hook(hook=hook)
 
-        assert set(get_post_fuzz_hooks('random_operation')) == set([hook])
+        assert set(get_post_fuzz_hooks('random_operation')) == {hook}

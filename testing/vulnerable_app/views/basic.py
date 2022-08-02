@@ -1,6 +1,7 @@
 """
 Basic, straight forward endpoints for MVP testing.
 """
+
 from flask_restplus import Resource
 
 from ..core.extensions import api
@@ -10,10 +11,7 @@ from .models.basic import session_model
 from .models.basic import variable_string_model
 
 
-ns = api.namespace(
-    get_name(__name__),
-    url_prefix='/{}'.format(get_name(__name__)),
-)
+ns = api.namespace(get_name(__name__), url_prefix=f'/{get_name(__name__)}')
 
 
 @ns.route('/')

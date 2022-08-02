@@ -55,11 +55,11 @@ class ModelBase:
     """
 
     @declared_attr
-    def __tablename__(cls):
+    def __tablename__(self):
         """
         Return the lowercase class name as the name of the table.
         """
-        return cls.__name__.lower()
+        return self.__name__.lower()
 
     id = Column(
         Integer,

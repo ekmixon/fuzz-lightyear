@@ -55,10 +55,7 @@ class FuzzingRequest:
 
     @property
     def id(self) -> str:
-        return '{}.{}'.format(
-            self.tag,
-            self.operation_id,
-        )
+        return f'{self.tag}.{self.operation_id}'
 
     def _encode_array_in_path(
         self,
@@ -145,9 +142,7 @@ class FuzzingRequest:
                 'headers', {},
             ),
         )
-        for key, value in headers.items():
-            args.append(f'-H \'{key}: {value}\'')
-
+        args.extend(f'-H \'{key}: {value}\'' for key, value in headers.items())
         return f'curl -X {data["method"]} {url} {" ".join(args)}'.rstrip()
 
     def send(
@@ -272,8 +267,7 @@ class FuzzingRequest:
 
 @lru_cache(maxsize=1)
 def get_victim_session_factory() -> Callable[..., Dict[str, Any]]:
-    factory = get_abstraction().get_victim_session
-    if factory:
+    if factory := get_abstraction().get_victim_session:
         return factory
 
     print_warning('No auth method specified.')
@@ -313,7 +307,7 @@ def _merge_kwargs(*args: Any) -> Dict[str, Any]:
 
     headers = {}  # type: Dict[str, str]
     for dictionary in args:
-        headers.update(dictionary.get('_request_options', {}).get('headers', {}))
+        headers |= dictionary.get('_request_options', {}).get('headers', {})
 
     request_options = {}  # type: Dict[str, Any]
     for dictionary in args:
@@ -321,11 +315,11 @@ def _merge_kwargs(*args: Any) -> Dict[str, Any]:
         # response_callbacks option correctly, but we don't use it
         # in fuzz-lightyear. _request_options docs:
         # https://bravado.readthedocs.io/en/stable/configuration.html
-        request_options.update(dictionary.get('_request_options', {}))
+        request_options |= dictionary.get('_request_options', {})
 
     output = {}  # type: Dict[str, Any]
     for dictionary in args:
-        output.update(dictionary)
+        output |= dictionary
 
     output['_request_options'] = request_options
     output['_request_options']['headers'] = headers
@@ -335,8 +329,4 @@ def _merge_kwargs(*args: Any) -> Dict[str, Any]:
 
 def _get_auth_header(func: Callable[..., Dict[str, Any]], op_id: str) -> Dict[str, Any]:
     header_args = inspect.getfullargspec(func.__wrapped__)  # type: ignore
-    if 'operation_id' in header_args.args:
-        auth_header = func(op_id)
-    else:
-        auth_header = func()
-    return auth_header
+    return func(op_id) if 'operation_id' in header_args.args else func()

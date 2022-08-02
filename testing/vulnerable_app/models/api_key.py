@@ -12,10 +12,7 @@ class JSONType(TypeDecorator):
     impl = Text
 
     def process_bind_param(self, value, dialect):
-        if value is None:
-            return '{}'
-
-        return json.dumps(value)
+        return '{}' if value is None else json.dumps(value)
 
     def process_result_value(self, value, dialect):
         # SQLite3 escapes single quotes with double single quotes

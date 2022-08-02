@@ -42,8 +42,11 @@ def run_sequence(
         # request, if they were factory-generated. This tries to ensure
         # the same object is referenced throughout the sequence, rather than
         # having the fuzzing engine constantly generate new objects.
-        for key in request.fuzzed_input:                            # type: ignore
-            if key in get_user_defined_mapping():
-                if get_user_defined_mapping()[key][request.operation_id]() is not None:
-                    responses.data[key] = request.fuzzed_input[key]     # type: ignore
+        for key in request.fuzzed_input:                # type: ignore
+            if (
+                key in get_user_defined_mapping()
+                and get_user_defined_mapping()[key][request.operation_id]()
+                is not None
+            ):
+                responses.data[key] = request.fuzzed_input[key]     # type: ignore
     return responses

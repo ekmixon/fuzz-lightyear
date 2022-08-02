@@ -116,7 +116,9 @@ def _add_request_to_sequence(
                 # Therefore, add the request to the sequence if it shares an edge with
                 # ANY of the requests in the sequence- leaving room for factory
                 # usage, but still keeping in line with the spirit of RESTler.
-                if any([req.operation_id in neighbor_requests for req in sequence]):
+                if any(
+                    req.operation_id in neighbor_requests for req in sequence
+                ):
                     new_sequence = sequence + [request]
                     output.append(new_sequence)
 
@@ -139,8 +141,9 @@ def _generate_request_graph() -> Dict[str, set]:
     for tag_group in dir(client):
         for operation_id in dir(getattr(client, tag_group)):
             operation = getattr(getattr(client, tag_group), operation_id).operation
-            responses = operation.op_spec.get('responses', {}).get('200', {})
-            if responses:
+            if responses := operation.op_spec.get('responses', {}).get(
+                '200', {}
+            ):
                 response_params = list(
                     responses.get('schema', {}).get('properties', {}).keys(),
                 )

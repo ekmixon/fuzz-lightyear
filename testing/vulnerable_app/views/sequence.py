@@ -3,6 +3,7 @@ These endpoints focus on testing the stateful-ness of the fuzzer.
 
 The `alpha` series of endpoints enforce basic stateful-ness.
 """
+
 from flask import abort
 from flask_restplus import reqparse
 from flask_restplus import Resource
@@ -18,10 +19,7 @@ from .models.basic import string_model
 from .models.database import widget_model
 
 
-ns = api.namespace(
-    get_name(__name__),
-    url_prefix='/{}'.format(get_name(__name__)),
-)
+ns = api.namespace(get_name(__name__), url_prefix=f'/{get_name(__name__)}')
 
 
 @api.marshal_with(string_model.format)

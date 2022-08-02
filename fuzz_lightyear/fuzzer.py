@@ -19,9 +19,10 @@ def fuzz_parameters(
     parameters: List[Tuple[str, Dict[str, Any]]],
     operation_id: str = None,
 ) -> SearchStrategy:
-    output = {}
-    for name, parameter in parameters:
-        output[name] = _fuzz_parameter(parameter, operation_id)
+    output = {
+        name: _fuzz_parameter(parameter, operation_id)
+        for name, parameter in parameters
+    }
 
     return st.fixed_dictionaries(output)
 
@@ -51,11 +52,7 @@ def _fuzz_parameter(
 
     _type = parameter.get('type')
     if not _type:
-        raise SwaggerValidationError(
-            'Missing \'type\' from {}'.format(
-                json.dumps(parameter),
-            ),
-        )
+        raise SwaggerValidationError(f"Missing \'type\' from {json.dumps(parameter)}")
 
     strategy = _get_strategy_from_factory(_type, operation_id, parameter.get('name'))
 
@@ -176,16 +173,11 @@ def _fuzz_array(
     # TODO: Handle `oneOf`
     strategy = st.lists(
         elements=_fuzz_parameter(item, operation_id, required=required),
-        min_size=parameter.get(
-            'minItems',
-            0 if not required else 1,
-        ),
+        min_size=parameter.get('minItems', 1 if required else 0),
         max_size=parameter.get('maxItems', None),
     )
-    if not required:
-        return st.one_of(st.none(), strategy)
 
-    return strategy
+    return strategy if required else st.one_of(st.none(), strategy)
 
 
 def _fuzz_object(
@@ -204,10 +196,9 @@ def _fuzz_object(
             )
         except KeyError:
             log.error(
-                'Invalid swagger specification: expected \'type\'. Got \'{}\''.format(
-                    json.dumps(specification),
-                ),
+                f"Invalid swagger specification: expected \'type\'. Got \'{json.dumps(specification)}\'"
             )
+
             raise
 
         if strategy:
