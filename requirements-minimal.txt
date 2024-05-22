@@ -3,3 +3,4 @@ bravado
 cached-property
 hypothesis>=4.56.1
 pyyaml
+requests>=2.32.0 # not directly required, pinned by Snyk to avoid a vulnerability
